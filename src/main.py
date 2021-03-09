@@ -1,4 +1,4 @@
-from PyQt5.QtCore import QDir, Qt, QUrl, pyqtSlot, pyqtSignal
+from PyQt5.QtCore import QDir, Qt, QUrl, pyqtSlot, pyqtSignal, QCoreApplication
 from PyQt5.QtMultimedia import QMediaContent, QMediaPlayer
 from PyQt5.QtMultimediaWidgets import QVideoWidget
 from PyQt5.QtGui import QIcon, QKeySequence
@@ -191,7 +191,7 @@ class VideoWindow(QMainWindow):
             self.rate = 1
 
     def exitCall(self):
-        sys.exit(app.exec_())
+        QCoreApplication.quit()
 
     def play(self):
         if self.mediaPlayer.state() == QMediaPlayer.PlayingState:
