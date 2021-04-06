@@ -59,12 +59,31 @@ class LabelEditorWidget(QWidget):
         self.tableWidget.resizeColumnsToContents()
         self.set_row_color(index, mode)
 
+    def new_mark_begin_end(self, label, begin, end):
+        index = self.tableWidget.rowCount() - 1
+        self.tableWidget.setItem(index, 0, QTableWidgetItem(str(label)))
+        timeItemBegin = QTableWidgetItem(begin)
+        timeItemEnd = QTableWidgetItem(end)
+        self.tableWidget.setItem(index, 1, timeItemBegin)
+        self.tableWidget.setItem(index, 2, timeItemEnd)
+        delButton = QPushButton()
+        delButton.setIcon(self.style().standardIcon(QStyle.SP_TrashIcon))
+        delButton.clicked.connect(self.deleteRow)
+        self.tableWidget.setCellWidget(index, 3, delButton)
+        self.tableWidget.scrollToItem(timeItemBegin)
+        self.tableWidget.resizeColumnsToContents()
+
     @pyqtSlot()
     def deleteRow(self):
         button = self.sender()
         if button:
             row = self.tableWidget.indexAt(button.pos()).row()
             self.tableWidget.removeRow(row)
+
+    def removeAllMarks(self):
+        rows = self.tableWidget.rowCount()
+        for row in range(0, rows - 1):
+            self.removeRow(0)
 
     def set_row_color(self, index, mode):
         t = self.tableWidget
@@ -95,5 +114,12 @@ class LabelEditorWidget(QWidget):
     def __row_colors(self, i, color):
         for ii in range(self.tableWidget.columnCount()-1):
             self.tableWidget.item(i, ii).setBackground(color)
+    
+    def set_marks(self, marks):
+        self.removeAllMarks()
+
+        for line in marks:
+            self.new_mark_begin_end(line[0], line[1], line[2])
+
 
 

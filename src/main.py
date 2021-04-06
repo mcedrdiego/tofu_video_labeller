@@ -122,15 +122,18 @@ class VideoWindow(QMainWindow):
     def create_menu_bar(self):
         openAction = create_action('open.png', '&Open', 'Ctrl+O', 'Open video',
                 self.openFile, self)
-        csvAction = create_action('save.png', '&Export', 'Ctrl+S',
+        csvExportAction = create_action('save.png', '&Export', 'Ctrl+S',
                 'Export to csv', self.exportCsv, self)
+        csvImportAction = create_action('open.png', '&Import', 'Ctrl+I',
+                'Import from csv', self.importCsv, self)
         exitAction = create_action('exit.png', '&Exit', 'Ctrl+Q', 'Exit',
                 self.exitCall, self)
 
         menuBar = self.menuBar()
         fileMenu = menuBar.addMenu('&File')
         fileMenu.addAction(openAction)
-        fileMenu.addAction(csvAction)
+        fileMenu.addAction(csvExportAction)
+        fileMenu.addAction(csvImportAction)
         fileMenu.addAction(exitAction)
 
     def set_layout(self, videoWidget, wid):
@@ -274,10 +277,28 @@ class VideoWindow(QMainWindow):
         self.removeAction(self.shortcuts[keySeqStr])
         del self.shortcuts[keySeqStr]
 
+    def importCsv(self):
+        if hasattr(self, "openedFile"):
+            suggestedName = QUrl(os.path.splitext(self.openedFile)[0] + '.csv')
+        else:
+            suggestedName = QUrl.fromLocalFile(QDir.homePath())
+
+        fileUrl, _ = QFileDialog.getOpenFileUrl(self, "Import marks", suggestedName, "CSV (*.csv)")
+        fileName = fileUrl.toLocalFile()
+
+        if fileName != '':
+             with open(fileName, mode='r') as csv_file:
+                labels = csv.reader(csv_file, delimiter=',', quotechar='"',
+                        quoting=csv.QUOTE_MINIMAL)
+                self.editorWidget.set_marks(labels)
+
     def exportCsv(self):
-        suggestedName = os.path.splitext(self.openedFile)[0] + '.csv'
-        fileUrl, _ = QFileDialog.getSaveFileUrl(self, QDir.homePath(),
-                QUrl.fromLocalFile(suggestedName))
+        if hasattr(self, "openedFile"):
+            suggestedName = QUrl(os.path.splitext(self.openedFile)[0] + '.csv')
+        else:
+            suggestedName = QUrl.fromLocalFile(QDir.homePath())
+    
+        fileUrl, _ = QFileDialog.getSaveFileUrl(self, "Export marks", QUrl(suggestedName), "CSV (*.csv)")
         fileName = fileUrl.toLocalFile()
 
         if fileName != '':

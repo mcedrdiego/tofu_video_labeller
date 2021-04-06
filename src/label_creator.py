@@ -82,7 +82,7 @@ class LabelCreatorWidget(QWidget):
         
 
     def exportLabels(self):
-        fileUrl, _ = QFileDialog.getSaveFileUrl(self.importExportButtons, "Export labels", QUrl(), "CSV (*.csv)")
+        fileUrl, _ = QFileDialog.getSaveFileUrl(self.importExportButtons, "Export labels", QUrl.fromLocalFile(QDir.homePath()), "CSV (*.csv)")
         fileName = fileUrl.toLocalFile()
 
         if fileName != '':
@@ -94,7 +94,7 @@ class LabelCreatorWidget(QWidget):
 
         
     def importLabels(self):
-        fileUrl, _ = QFileDialog.getOpenFileUrl(self.importExportButtons, "Import labels", QUrl(), "CSV (*.csv)")
+        fileUrl, _ = QFileDialog.getOpenFileUrl(self.importExportButtons, "Import labels", QUrl.fromLocalFile(QDir.homePath()), "CSV (*.csv)")
         fileName = fileUrl.toLocalFile()
 
         if fileName != '':
