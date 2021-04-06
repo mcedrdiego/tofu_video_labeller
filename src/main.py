@@ -182,6 +182,7 @@ class VideoWindow(QMainWindow):
         if fileName != '':
             self.mediaPlayer.setMedia(
                     QMediaContent(QUrl.fromLocalFile(fileName)))
+            self.absOpenedFile = os.path.abspath(fileName)
             self.openedFile = os.path.basename(fileName)
             self.setWindowTitle("tofu - " + self.openedFile)
             self.playButton.setEnabled(True)
@@ -277,9 +278,12 @@ class VideoWindow(QMainWindow):
         self.removeAction(self.shortcuts[keySeqStr])
         del self.shortcuts[keySeqStr]
 
+    def getCSVPath(self):
+        return os.path.splitext(self.absOpenedFile)[0] + '.csv'
+
     def importCsv(self):
         if hasattr(self, "openedFile"):
-            suggestedName = QUrl(os.path.splitext(self.openedFile)[0] + '.csv')
+            suggestedName = QUrl.fromLocalFile(self.getCSVPath())
         else:
             suggestedName = QUrl.fromLocalFile(QDir.homePath())
 
@@ -294,7 +298,7 @@ class VideoWindow(QMainWindow):
 
     def exportCsv(self):
         if hasattr(self, "openedFile"):
-            suggestedName = QUrl(os.path.splitext(self.openedFile)[0] + '.csv')
+            suggestedName = QUrl.fromLocalFile(self.getCSVPath())
         else:
             suggestedName = QUrl.fromLocalFile(QDir.homePath())
     

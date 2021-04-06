@@ -137,6 +137,7 @@ class LabelCreatorWidget(QWidget):
         delButton.clicked.connect(self.deleteRow)
         self.tableWidget.setCellWidget(index, 3, delButton)
         self.tableWidget.scrollToItem(keyItem)
+        print(keySeq)
         self.comm.newLabelSignal.emit(keySeq, label)
         self.tableWidget.insertRow(index+1)
         newButton = self._create_newButton()
