@@ -2,3 +2,4 @@ venv/
 activate
 *.swp
 __pycache__/
+.vscode

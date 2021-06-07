@@ -72,6 +72,7 @@ class LabelEditorWidget(QWidget):
         self.tableWidget.setCellWidget(index, 3, delButton)
         self.tableWidget.scrollToItem(timeItemBegin)
         self.tableWidget.resizeColumnsToContents()
+        self.tableWidget.insertRow(index+1)
 
     @pyqtSlot()
     def deleteRow(self):
@@ -83,7 +84,7 @@ class LabelEditorWidget(QWidget):
     def removeAllMarks(self):
         rows = self.tableWidget.rowCount()
         for row in range(0, rows - 1):
-            self.removeRow(0)
+            self.tableWidget.removeRow(0)
 
     def set_row_color(self, index, mode):
         t = self.tableWidget
@@ -120,6 +121,6 @@ class LabelEditorWidget(QWidget):
 
         for line in marks:
             self.new_mark_begin_end(line[0], line[1], line[2])
-
+            
 
 
