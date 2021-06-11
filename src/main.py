@@ -138,6 +138,13 @@ class VideoWindow(QMainWindow):
 
     def set_layout(self, videoWidget, wid):
         labellingLayout = QVBoxLayout()
+
+        spWidget = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
+        spWidget.setHorizontalStretch(1)
+        self.creatorWidget.setSizePolicy(spWidget)
+        self.editorWidget.setSizePolicy(spWidget)
+
+
         labellingLayout.addWidget(self.creatorWidget)
         labellingLayout.addWidget(self.editorWidget)
 
