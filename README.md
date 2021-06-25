@@ -37,7 +37,7 @@ $ pip install -r requirements.txt
 
 ### Windows
 
-> TODO: Not tested yet... All contributions are welcome.
+> Coming soon 
 
 
 ## Usage
