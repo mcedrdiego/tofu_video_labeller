@@ -2,7 +2,7 @@
 
 block_cipher = None
 
-a = Analysis(['src\\main.py'],
+a = Analysis(['main.py'],
              pathex=['C:\\temp\\QT\\tofu_video_labeller-master'],
              binaries=[],
              datas=[],
