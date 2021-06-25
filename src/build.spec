@@ -1,7 +1,7 @@
 # -*- mode: python ; coding: utf-8 -*-
 
 
-a = Analysis(['src\\main.py'],
+a = Analysis(['src/main.py'],
              pathex=['C:\\temp\\QT\\tofu_video_labeller-master'],
              binaries=[],
              datas=[],
