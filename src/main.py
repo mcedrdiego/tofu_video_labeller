@@ -18,6 +18,13 @@ import os
 import csv
 from functools import partial
 
+try:
+    from PyQt5.QtWinExtras import QtWin
+    myappid = 'tofu_video_labeller.myprod.subprod.version_0.0.1'
+    QtWin.setCurrentProcessExplicitAppUserModelID(myappid)
+except ImportError:
+    pass
+
 
 class VideoWindow(QMainWindow):
 
@@ -145,14 +152,14 @@ class VideoWindow(QMainWindow):
         self.editorWidget.setSizePolicy(spWidget)
 
 
-        labellingLayout.addWidget(self.creatorWidget)
-        labellingLayout.addWidget(self.editorWidget)
+        labellingLayout.addWidget(self.creatorWidget, 1)
+        labellingLayout.addWidget(self.editorWidget, 1)
 
         controlLayout = self.make_control_layout()
 
         videoAreaLayout = QVBoxLayout()
-        videoAreaLayout.addWidget(videoWidget)
-        videoAreaLayout.addLayout(controlLayout)
+        videoAreaLayout.addWidget(videoWidget, 5)
+        videoAreaLayout.addLayout(controlLayout, 1)
         videoAreaLayout.addWidget(self.errorLabel)
 
         layout = QHBoxLayout()
@@ -329,6 +336,7 @@ class VideoWindow(QMainWindow):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
+    app.setWindowIcon(QIcon('static/img/tofu.png'))
     player = VideoWindow()
     player.resize(940, 480)
     player.show()
