@@ -1,5 +1,6 @@
 # -*- mode: python ; coding: utf-8 -*-
 
+block_cipher = None
 
 a = Analysis(['src/main.py'],
              pathex=['C:\\temp\\QT\\tofu_video_labeller-master'],
