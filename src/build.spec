@@ -3,9 +3,9 @@
 block_cipher = None
 
 a = Analysis(['main.py'],
-             pathex=['C:\\temp\\QT\\tofu_video_labeller-master'],
+             pathex=['C:\\temp\\QT\\gg\\tofu_video_labeller'],
              binaries=[],
-             datas=[],
+             datas=[('./static/img/tofu.ico', './static/img/')],
              hiddenimports=[],
              hookspath=[],
              runtime_hooks=[],
@@ -26,7 +26,8 @@ exe = EXE(pyz,
           bootloader_ignore_signals=False,
           strip=False,
           upx=True,
-          console=False)
+          console=False,
+	      icon='./static/img/tofu.ico')
 coll = COLLECT(exe,
                a.binaries,
                a.zipfiles,

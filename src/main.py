@@ -336,7 +336,7 @@ class VideoWindow(QMainWindow):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    app.setWindowIcon(QIcon('static/img/tofu.png'))
+    app.setWindowIcon(QIcon('./static/img/tofu.ico'))
     player = VideoWindow()
     player.resize(940, 480)
     player.show()
