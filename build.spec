@@ -1,11 +1,13 @@
 # -*- mode: python ; coding: utf-8 -*-
 
+
 block_cipher = None
 
-a = Analysis(['main.py'],
+
+a = Analysis(['src\\main.py'],
              pathex=['C:\\temp\\QT\\gg\\tofu_video_labeller'],
              binaries=[],
-             datas=[('./static/img/tofu.ico', './static/img/')],
+             datas=[('src\\static\\img\\tofu.ico', '.\\static\\img\\')],
              hiddenimports=[],
              hookspath=[],
              runtime_hooks=[],
@@ -21,13 +23,13 @@ exe = EXE(pyz,
           a.scripts,
           [],
           exclude_binaries=True,
-          name='Tofu Video Labeller',
+          name='Tofu_Video_Labeller',
           debug=False,
           bootloader_ignore_signals=False,
           strip=False,
           upx=True,
           console=False,
-	      icon='./static/img/tofu.ico')
+	      icon='src\\static\\img\\tofu.ico')
 coll = COLLECT(exe,
                a.binaries,
                a.zipfiles,
@@ -35,4 +37,5 @@ coll = COLLECT(exe,
                strip=False,
                upx=True,
                upx_exclude=[],
-               name='Tofu Video Labeller')
+               icon='src\\static\\img\\tofu.ico',
+               name='Tofu_Video_Labeller')
