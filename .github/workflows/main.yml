@@ -4,9 +4,6 @@ name: Build GUI exe with PyInstaller
 on:
   push:
     branches: [dev]
-  
-  create: 
-    tags: [v*]
 
 jobs:
   release-project: 
@@ -36,6 +33,7 @@ jobs:
     
     steps:
       - uses: actions/checkout@v2
+
       - name: PyInstaller Windows
         uses: JackMcKew/pyinstaller-action-windows@v0.1.2
         with:
