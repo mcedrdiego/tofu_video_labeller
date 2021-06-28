@@ -3,8 +3,7 @@
 name: Build GUI exe with PyInstaller
 on:
   push:
-    branches: [ dev ]
-  pull_request: [ master ]
+    branches: [ master ]
 
 jobs:
   release-project: 
@@ -44,4 +43,3 @@ jobs:
         with:
           name: tofu_video_labeller_exe
           path: src/dist/windows
-  
