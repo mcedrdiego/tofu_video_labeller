@@ -37,9 +37,9 @@ jobs:
       - name: PyInstaller Windows
         uses: JackMcKew/pyinstaller-action-windows@main
         with:
-          path: src
+          path: .
 
       - uses: actions/upload-artifact@v2
         with:
           name: tofu_video_labeller_exe
-          path: src/dist/windows
+          path: ./dist/windows
