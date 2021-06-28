@@ -31,7 +31,7 @@ class VideoWindow(QMainWindow):
     def __init__(self, parent=None):
         super(VideoWindow, self).__init__(parent)
         self.setWindowTitle("tofu")
-        self.setWindowIcon(QIcon('src/static/img/tofu.png'))
+        self.setWindowIcon(QIcon(os.path.join('static', 'img', 'tofu.ico')))
         self.comm = SignalBus.instance()
         self.comm.newLabelSignal.connect(self.bindLabelEvent)
         self.comm.delLabelSignal.connect(self.unbindLabelEvent)
@@ -336,7 +336,7 @@ class VideoWindow(QMainWindow):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    app.setWindowIcon(QIcon('static/img/tofu.png'))
+    # app.setWindowIcon(QIcon('tofu.ico'))
     player = VideoWindow()
     player.resize(940, 480)
     player.show()
