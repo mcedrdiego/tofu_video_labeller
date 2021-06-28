@@ -37,7 +37,9 @@ $ pip install -r requirements.txt
 
 ### Windows
 
-> Coming soon 
+To play videos windows you must install *video codecs* first.<br>
+Download here: <a href="https://github.com/Nevcairiel/LAVFilters/releases" target="blank">LAV Filters</a>
+
 
 
 ## Usage
