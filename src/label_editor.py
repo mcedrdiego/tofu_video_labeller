@@ -2,16 +2,17 @@ from PyQt5.QtWidgets import (QLabel, QDialog, QFormLayout, QGroupBox,
         QPushButton, QSizePolicy, QStyle, QVBoxLayout, QWidget, QLineEdit,
         QTableWidget, QTableWidgetItem, QAction, QAbstractScrollArea, QFrame,
         QDialogButtonBox)
-from PyQt5.QtCore import pyqtSlot, Qt
+from PyQt5.QtCore import pyqtSlot, Qt, QEvent
 from PyQt5.QtGui import QIcon, QColor
 
-from utils import format_time
+from utils import format_time, str_to_ms
 
 class LabelEditorWidget(QWidget):
 
-    def __init__(self):
+    def __init__(self, control):
         super(LabelEditorWidget, self).__init__()
         self.title = 'Label Editor'
+        self.control = control
         self.default_color = None
         self.initUI()
         self.labels_state = {}
@@ -32,7 +33,10 @@ class LabelEditorWidget(QWidget):
                 QAbstractScrollArea.AdjustToContents)
         self.tableWidget.setHorizontalHeaderLabels(['label', 'begin', 'end',
             ''])
+        self.tableWidget.setToolTip("Right click on a timestamp to set the player.")
         self.tableWidget.resizeColumnsToContents()
+        self.tableWidget.viewport().installEventFilter(self)
+
 
     def new_mark(self, time, label):
         mode = self.__toggle_label_mode(label)
@@ -73,6 +77,17 @@ class LabelEditorWidget(QWidget):
         self.tableWidget.scrollToItem(timeItemBegin)
         self.tableWidget.resizeColumnsToContents()
         self.tableWidget.insertRow(index+1)
+
+    def eventFilter(self, source, event):
+        if(event.type() == QEvent.MouseButtonPress and
+            event.buttons() == Qt.RightButton and
+            source is self.tableWidget.viewport()):
+            item = self.tableWidget.itemAt(event.pos())
+            if item and item.column() in [1, 2]:
+                position = str_to_ms(item.text())
+                if position > 0:
+                    self.control.setPosition(position)
+        return super(LabelEditorWidget, self).eventFilter(source, event)
 
     @pyqtSlot()
     def deleteRow(self):

@@ -21,4 +21,18 @@ def format_time(msec):
     time = [str(tt).zfill(2) for tt in t]
     return ':'.join(time) + "," + format(msec % 1000, '03d')
 
+def str_to_ms(txt):
+    elems = txt.split(",")
+    if len(elems) != 2:
+        return -1
+    ms = int(elems[1])
+    elems2 = elems[0].split(":")
+    if len(elems2) != 3:
+        return -1
+    h = int(elems2[0])
+    m = int(elems2[1])
+    s = int(elems2[2])
+
+    return ms + 1000 * (s + 60 * (m + 60 * h))
+
 

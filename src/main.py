@@ -59,7 +59,7 @@ class VideoWindow(QMainWindow):
         self.mediaPlayer = QMediaPlayer(None, QMediaPlayer.VideoSurface)
 
         videoWidget = QVideoWidget()
-        self.editorWidget = LabelEditorWidget()
+        self.editorWidget = LabelEditorWidget(control = self)
         self.creatorWidget = LabelCreatorWidget()
         self.create_control()
 
