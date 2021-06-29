@@ -37,8 +37,13 @@ $ pip install -r requirements.txt
 
 ### Windows
 
-> TODO: Not tested yet... All contributions are welcome.
+To play videos windows you must install *video codecs* first.<br>
+1. Download here: <a href="https://github.com/Nevcairiel/LAVFilters/releases" target="blank">LAV Filters</a>
 
+2. From latest releases download <strong>tofu_video_labeller.zip</strong>
+[<a href="https://github.com/mcedrdiego/tofu_video_labeller/releases">Here</a>]
+
+3. Unzip file and run "Tofu_Video_Labeller.exe"
 
 ## Usage
 
