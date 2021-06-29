@@ -66,10 +66,10 @@ class VideoWindow(QMainWindow):
         self.playButton.clicked.connect(self.play)
         self.speedUpButton.clicked.connect(self.speed)
         self.slowDownButton.clicked.connect(self.slow)
-        self.adv3Button.clicked.connect(partial(self.advance, 3000))
-        self.goBack3Button.clicked.connect(partial(self.back, 3000))
-        self.advanceButton.clicked.connect(partial(self.advance, 10000))
-        self.goBackButton.clicked.connect(partial(self.back, 10000))
+        self.adv3Button.clicked.connect(partial(self.advance, 100))
+        self.goBack3Button.clicked.connect(partial(self.back, 100))
+        self.advanceButton.clicked.connect(partial(self.advance, 5000))
+        self.goBackButton.clicked.connect(partial(self.back, 5000))
         self.positionSlider.sliderMoved.connect(self.setPosition)
 
         return videoWidget
@@ -97,21 +97,25 @@ class VideoWindow(QMainWindow):
         self.slowDownButton.setEnabled(False)
 
         self.adv3Button = QPushButton()
+        self.adv3Button.setToolTip("> 0.1 second")
         self.adv3Button.setIcon(
                 self.style().standardIcon(QStyle.SP_ArrowRight))
         self.adv3Button.setEnabled(False)
 
         self.advanceButton = QPushButton()
+        self.advanceButton.setToolTip("> 5 seconds")
         self.advanceButton.setIcon(
                 self.style().standardIcon(QStyle.SP_MediaSkipForward))
         self.advanceButton.setEnabled(False)
 
         self.goBack3Button = QPushButton()
+        self.goBack3Button.setToolTip("< 0.1 second")
         self.goBack3Button.setIcon(
                 self.style().standardIcon(QStyle.SP_ArrowLeft))
         self.goBack3Button.setEnabled(False)
 
         self.goBackButton = QPushButton()
+        self.goBackButton.setToolTip("< 5 seconds")
         self.goBackButton.setIcon(
                 self.style().standardIcon(QStyle.SP_MediaSkipBackward))
         self.goBackButton.setEnabled(False)
@@ -172,15 +176,24 @@ class VideoWindow(QMainWindow):
         buttonsLayout = QHBoxLayout()
         buttonsLayout.setContentsMargins(0, 0, 0, 0)
 
-        buttonsLayout.addWidget(self.timeBox)
-        buttonsLayout.addWidget(self.slowDownButton)
-        buttonsLayout.addWidget(self.goBackButton)
-        buttonsLayout.addWidget(self.goBack3Button)
-        buttonsLayout.addWidget(self.playButton)
-        buttonsLayout.addWidget(self.adv3Button)
-        buttonsLayout.addWidget(self.advanceButton)
-        buttonsLayout.addWidget(self.speedUpButton)
-        buttonsLayout.addWidget(self.rateBox)
+        buttonsPlayerLayout = QHBoxLayout()
+        buttonsPlayerLayout.setContentsMargins(0, 0, 0, 0)
+        buttonsLayout.addLayout(buttonsPlayerLayout, 5)
+
+        buttonsPlayerLayout.addWidget(self.timeBox)
+        buttonsPlayerLayout.addWidget(self.goBackButton)
+        buttonsPlayerLayout.addWidget(self.goBack3Button)
+        buttonsPlayerLayout.addWidget(self.playButton)
+        buttonsPlayerLayout.addWidget(self.adv3Button)
+        buttonsPlayerLayout.addWidget(self.advanceButton)
+        
+        buttonsRateLayout = QHBoxLayout()
+        buttonsRateLayout.setContentsMargins(0, 0, 0, 0)
+        buttonsLayout.addLayout(buttonsRateLayout, 1)
+
+        buttonsRateLayout.addWidget(self.slowDownButton)
+        buttonsRateLayout.addWidget(self.rateBox)
+        buttonsRateLayout.addWidget(self.speedUpButton)
 
         layout = QVBoxLayout()
         layout.setContentsMargins(0, 0, 0, 0)
@@ -196,6 +209,7 @@ class VideoWindow(QMainWindow):
         if fileName != '':
             self.mediaPlayer.setMedia(
                     QMediaContent(QUrl.fromLocalFile(fileName)))
+            #TODO self.mediaPlayer.setNotifyInterval()
             self.absOpenedFile = os.path.abspath(fileName)
             self.openedFile = os.path.basename(fileName)
             self.setWindowTitle("tofu - " + self.openedFile)
