@@ -1,8 +1,8 @@
 import sys
 from PyQt5.QtWidgets import (QWidget, QSlider, QApplication,
                              QHBoxLayout, QVBoxLayout)
-from PyQt5.QtCore    import QObject, Qt, pyqtSignal
-from PyQt5.QtGui     import QPainter, QFont, QColor, QPen
+from PyQt5.QtCore import QObject, Qt, pyqtSignal
+from PyQt5.QtGui import QPainter, QFont, QColor, QPen
 
 from signals import SignalBus
 
@@ -14,6 +14,7 @@ class LabelSliderWidget(QWidget):
 
     def initUI(self):
         self.setMinimumSize(170, 30)
+        self.setMaximumHeight(30)
         self.value = 2
         self.num   = [2, 4, 6, 8]
 
