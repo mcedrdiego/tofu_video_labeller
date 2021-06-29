@@ -209,7 +209,6 @@ class VideoWindow(QMainWindow):
         if fileName != '':
             self.mediaPlayer.setMedia(
                     QMediaContent(QUrl.fromLocalFile(fileName)))
-            #TODO self.mediaPlayer.setNotifyInterval()
             self.absOpenedFile = os.path.abspath(fileName)
             self.openedFile = os.path.basename(fileName)
             self.setWindowTitle("tofu - " + self.openedFile)
