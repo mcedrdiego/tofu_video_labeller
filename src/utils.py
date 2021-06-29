@@ -10,7 +10,8 @@ def create_action(icon, action, shortcut, tip, conn, parent):
     return new_action
 
 
-def format_time(sec):
+def format_time(msec):
+    sec = int(msec / 1000)
     t = []
     t.append(int(sec % 60))
     minu = sec/60
@@ -18,6 +19,6 @@ def format_time(sec):
     t.append(int(minu/60))
     t = t[::-1]
     time = [str(tt).zfill(2) for tt in t]
-    return ':'.join(time)
+    return ':'.join(time) + "," + format(msec % 1000, '03d')
 
 

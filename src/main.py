@@ -59,10 +59,10 @@ class VideoWindow(QMainWindow):
         self.playButton.clicked.connect(self.play)
         self.speedUpButton.clicked.connect(self.speed)
         self.slowDownButton.clicked.connect(self.slow)
-        self.adv3Button.clicked.connect(partial(self.advance, 3))
-        self.goBack3Button.clicked.connect(partial(self.back, 3))
-        self.advanceButton.clicked.connect(partial(self.advance, 10))
-        self.goBackButton.clicked.connect(partial(self.back, 10))
+        self.adv3Button.clicked.connect(partial(self.advance, 3000))
+        self.goBack3Button.clicked.connect(partial(self.back, 3000))
+        self.advanceButton.clicked.connect(partial(self.advance, 10000))
+        self.goBackButton.clicked.connect(partial(self.back, 10000))
         self.positionSlider.sliderMoved.connect(self.setPosition)
 
         return videoWidget
@@ -238,14 +238,14 @@ class VideoWindow(QMainWindow):
             # TODO: Workaround pt 2: end
             self.rateBox.setText(str(self.rate)+'x')
 
-    def advance(self, t=10):
+    def advance(self, t=10000):
         currentPos = self.mediaPlayer.position()
-        nextPos  = currentPos + t*1000
+        nextPos  = currentPos + t
         self.setPosition(nextPos)
 
-    def back(self, t=10):
+    def back(self, t=10000):
         currentPos = self.mediaPlayer.position()
-        nextPos  = max(currentPos - t*1000, 0)
+        nextPos  = max(currentPos - t, 0)
         self.setPosition(nextPos)
 
     def mediaStateChanged(self, state):
@@ -258,7 +258,7 @@ class VideoWindow(QMainWindow):
 
     def positionChanged(self, position):
         self.positionSlider.setValue(position)
-        self.timeBox.setText(format_time(int(position/1000)))
+        self.timeBox.setText(format_time(position))
 
     def durationChanged(self, duration):
         self.positionSlider.setRange(0, duration)
@@ -324,7 +324,7 @@ class VideoWindow(QMainWindow):
         state = self.mediaPlayer.state()
         if state == QMediaPlayer.PlayingState or state == \
                 QMediaPlayer.PausedState:
-            self.editorWidget.new_mark(self.mediaPlayer.position()/1000, label)
+            self.editorWidget.new_mark(self.mediaPlayer.position(), label)
 
 
 if __name__ == '__main__':
