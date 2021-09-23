@@ -46,6 +46,8 @@ class Subtitles:
     
     def add_row(self, row):
         threshold_warning_sec = 10
+        if row[2] == "...":
+            row[2] = "06:00:00,000"
         if len(self.messages) == 0:
             self.messages.append(Subtitle(row[0], row[1]))
             self.messages.append(Subtitle("", row[2]))
