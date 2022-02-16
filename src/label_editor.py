@@ -23,7 +23,12 @@ class LabelEditorWidget(QWidget):
         self.setWindowTitle(self.title)
         self.createTable()
         self.layout = QVBoxLayout()
+        self.sortItems = QPushButton()
+        self.sortItems.setEnabled(True)
+        self.sortItems.setText("Sort")
+        self.sortItems.clicked.connect(self.onSortItems)
         self.layout.addWidget(self.tableWidget)
+        self.layout.addWidget(self.sortItems)
         self.setLayout(self.layout)
 
     def createTable(self):
@@ -89,6 +94,22 @@ class LabelEditorWidget(QWidget):
                 if position > 0:
                     self.control.setPosition(position)
         return super(LabelEditorWidget, self).eventFilter(source, event)
+
+    def onSortItems(self):
+        # load data
+        entries = self.get_marks()
+        
+        # add supplementary values
+        entries = [ e + [str_to_ms(e[1]), str_to_ms(e[2])] for e in entries]
+
+        # sort data
+        entries.sort(key=lambda row: row[3])
+        
+        # update data
+        for i, e in enumerate(entries):
+            self.highight_intersecting_item(i, False)
+            for c in range(3):
+                self.tableWidget.item(i, c).setText(e[c])
 
     @pyqtSlot()
     def deleteRow(self):
