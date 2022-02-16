@@ -140,9 +140,7 @@ class LabelEditorWidget(QWidget):
             if start != "ERROR_INVALID_VALUE":
                 startms = str_to_ms(start)
                 if ts >= startms:
-                    endms = -1
-                    if end != "ERROR_INVALID_VALUE":
-                        endms = str_to_ms(end)
+                    endms = str_to_ms(end)
                     self.highight_intersecting_item(ii, endms < 0 or ts <= endms)
                 else:
                     self.highight_intersecting_item(ii, False)
