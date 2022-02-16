@@ -14,6 +14,7 @@ class LabelEditorWidget(QWidget):
         self.title = 'Label Editor'
         self.control = control
         self.default_color = None
+        self.active_color = QColor(64, 249, 107)
         self.initUI()
         self.labels_state = {}
 
@@ -104,7 +105,7 @@ class LabelEditorWidget(QWidget):
     def set_row_color(self, index, mode):
         t = self.tableWidget
         if not mode:
-            self.__row_colors(index, QColor(64, 249, 107))
+            self.__row_colors(index, self.active_color)
         else:
             self.__row_colors(index, self.default_color)
 
@@ -129,8 +130,29 @@ class LabelEditorWidget(QWidget):
 
     def __row_colors(self, i, color):
         for ii in range(self.tableWidget.columnCount()-1):
-            self.tableWidget.item(i, ii).setBackground(color)
+            if ii != 0:
+                self.tableWidget.item(i, ii).setBackground(color)
     
+    def highight_intersecting_items(self, ts):
+        for ii in range(self.tableWidget.columnCount() - 1):
+            start = self.get_item_marks(ii, 1)
+            end = self.get_item_marks(ii, 2)
+            if start != "ERROR_INVALID_VALUE":
+                startms = str_to_ms(start)
+                if ts >= startms:
+                    endms = -1
+                    if end != "ERROR_INVALID_VALUE":
+                        endms = str_to_ms(end)
+                    self.highight_intersecting_item(ii, endms < 0 or ts <= endms)
+                else:
+                    self.highight_intersecting_item(ii, False)
+    
+    def highight_intersecting_item(self, index, intersecting):
+        if intersecting:
+            self.tableWidget.item(index, 0).setBackground(self.active_color)
+        else:
+            self.tableWidget.item(index, 0).setBackground(self.default_color)
+
     def set_marks(self, marks):
         self.removeAllMarks()
 

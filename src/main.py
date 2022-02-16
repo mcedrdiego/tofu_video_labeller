@@ -52,6 +52,7 @@ class VideoWindow(QMainWindow):
         self.mediaPlayer.setVideoOutput(videoWidget)
         self.mediaPlayer.stateChanged.connect(self.mediaStateChanged)
         self.mediaPlayer.positionChanged.connect(self.positionChanged)
+        self.mediaPlayer.setNotifyInterval(100)
         self.mediaPlayer.durationChanged.connect(self.durationChanged)
         self.mediaPlayer.error.connect(self.handleError)
 
@@ -297,6 +298,7 @@ class VideoWindow(QMainWindow):
     def positionChanged(self, position):
         self.positionSlider.setValue(position)
         self.timeBox.setText(format_time(position))
+        self.editorWidget.highight_intersecting_items(position)
 
     def durationChanged(self, duration):
         self.positionSlider.setRange(0, duration)
