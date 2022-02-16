@@ -178,5 +178,32 @@ class LabelEditorWidget(QWidget):
         for line in marks:
             self.new_mark_begin_end(line[0], line[1], line[2])
             
+    def updateSelectedTimestamp(self, ts):
+        tstext = format_time(ts)
+        item = self.tableWidget.currentItem()
+        if item != None:
+            c = item.column()
+            if c in [1, 2]:
+                if c == 2:
+                    i = str_to_ms(item.text())
+                    if i <= ts:
+                        item.setText(tstext)
+                    else:
+                        n = str_to_ms(self.tableWidget.item(item.row(), 1).text())
+                        if n <= ts:
+                            item.setText(tstext)
+                else:
+                    i = str_to_ms(item.text())
+                    if i >= ts:
+                        item.setText(tstext)
+                    else:
+                        n = str_to_ms(self.tableWidget.item(item.row(), 2).text())
+                        if n < 0 or n >= ts:
+                            item.setText(tstext)
+                        
+
+
+
+
 
 

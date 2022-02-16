@@ -1,4 +1,4 @@
-from PyQt5.QtCore import QDir, Qt, QUrl, pyqtSlot, pyqtSignal, QCoreApplication
+from PyQt5.QtCore import QDir, Qt, QUrl, pyqtSlot, pyqtSignal, QCoreApplication, QTimer
 from PyQt5.QtMultimedia import QMediaContent, QMediaPlayer
 from PyQt5.QtMultimediaWidgets import QVideoWidget
 from PyQt5.QtGui import QIcon, QKeySequence
@@ -25,6 +25,25 @@ try:
 except ImportError:
     pass
 
+
+class QDoubleClickButton(QPushButton):
+    doubleClicked = pyqtSignal()
+    clicked = pyqtSignal()
+
+    def __init__(self, *args, **kwargs):
+        QPushButton.__init__(self, *args, **kwargs)
+        self.timer = QTimer()
+        self.timer.setSingleShot(True)
+        self.timer.timeout.connect(self.clicked.emit)
+        super().clicked.connect(self.checkDoubleClick)
+
+    @pyqtSlot()
+    def checkDoubleClick(self):
+        if self.timer.isActive():
+            self.doubleClicked.emit()
+            self.timer.stop()
+        else:
+            self.timer.start(250)
 
 class VideoWindow(QMainWindow):
 
@@ -74,6 +93,7 @@ class VideoWindow(QMainWindow):
         self.advanceButton.clicked.connect(partial(self.advance, 5000))
         self.goBackButton.clicked.connect(partial(self.back, 5000))
         self.positionSlider.sliderMoved.connect(self.setPosition)
+        self.timeBox.doubleClicked.connect(self.onDoubleClickTimeBox)
 
         return videoWidget
 
@@ -135,8 +155,10 @@ class VideoWindow(QMainWindow):
                 self.style().standardIcon(QStyle.SP_MediaSkipBackward))
         self.goBackButton.setEnabled(False)
 
-        self.timeBox = QLabel(format_time(0), self)
-        self.timeBox.setAlignment(Qt.AlignCenter)
+        self.timeBox = QDoubleClickButton(format_time(0), self)
+        self.timeBox.setToolTip("A double clic on the label set the begin or end timestamp selected in the table")
+        self.timeBox.setEnabled(False)
+
         self.rateBox = QLabel(str(self.rate)+'x', self)
         self.rateBox.setAlignment(Qt.AlignCenter)
 
@@ -144,6 +166,12 @@ class VideoWindow(QMainWindow):
 
         self.positionSlider = QSlider(Qt.Horizontal)
         self.positionSlider.setRange(0, 0)
+
+    def onDoubleClickTimeBox(self):
+        position = self.mediaPlayer.position()
+        self.editorWidget.updateSelectedTimestamp(position)
+        self.editorWidget.highight_intersecting_items(position)
+
 
     def create_menu_bar(self):
         openAction = create_action('open.png', '&Open', 'Ctrl+O', 'Open video',
@@ -238,6 +266,7 @@ class VideoWindow(QMainWindow):
             self.goBackButton.setEnabled(True)
             self.goBack3Button.setEnabled(True)
             self.goBack1Button.setEnabled(True)
+            self.timeBox.setEnabled(True)
             self.rate = 1
 
     def exitCall(self):
