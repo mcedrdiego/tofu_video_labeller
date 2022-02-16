@@ -66,8 +66,10 @@ class VideoWindow(QMainWindow):
         self.playButton.clicked.connect(self.play)
         self.speedUpButton.clicked.connect(self.speed)
         self.slowDownButton.clicked.connect(self.slow)
-        self.adv3Button.clicked.connect(partial(self.advance, 100))
-        self.goBack3Button.clicked.connect(partial(self.back, 100))
+        self.adv3Button.clicked.connect(partial(self.advance, 300))
+        self.adv1Button.clicked.connect(partial(self.advance, 100))
+        self.goBack3Button.clicked.connect(partial(self.back, 300))
+        self.goBack1Button.clicked.connect(partial(self.back, 100))
         self.advanceButton.clicked.connect(partial(self.advance, 5000))
         self.goBackButton.clicked.connect(partial(self.back, 5000))
         self.positionSlider.sliderMoved.connect(self.setPosition)
@@ -96,10 +98,16 @@ class VideoWindow(QMainWindow):
                 self.style().standardIcon(QStyle.SP_MediaSeekBackward))
         self.slowDownButton.setEnabled(False)
 
-        self.adv3Button = QPushButton()
-        self.adv3Button.setToolTip("> 0.1 second")
-        self.adv3Button.setIcon(
+        self.adv1Button = QPushButton()
+        self.adv1Button.setToolTip("> 0.1 second")
+        self.adv1Button.setIcon(
                 self.style().standardIcon(QStyle.SP_ArrowRight))
+        self.adv1Button.setEnabled(False)
+
+        self.adv3Button = QPushButton()
+        self.adv3Button.setToolTip("> 0.3 second")
+        self.adv3Button.setIcon(
+                self.style().standardIcon(QStyle.SP_MediaSeekForward))
         self.adv3Button.setEnabled(False)
 
         self.advanceButton = QPushButton()
@@ -108,10 +116,16 @@ class VideoWindow(QMainWindow):
                 self.style().standardIcon(QStyle.SP_MediaSkipForward))
         self.advanceButton.setEnabled(False)
 
-        self.goBack3Button = QPushButton()
-        self.goBack3Button.setToolTip("< 0.1 second")
-        self.goBack3Button.setIcon(
+        self.goBack1Button = QPushButton()
+        self.goBack1Button.setToolTip("< 0.1 second")
+        self.goBack1Button.setIcon(
                 self.style().standardIcon(QStyle.SP_ArrowLeft))
+        self.goBack1Button.setEnabled(False)
+
+        self.goBack3Button = QPushButton()
+        self.goBack3Button.setToolTip("< 0.3 second")
+        self.goBack3Button.setIcon(
+                self.style().standardIcon(QStyle.SP_MediaSeekBackward))
         self.goBack3Button.setEnabled(False)
 
         self.goBackButton = QPushButton()
@@ -183,7 +197,9 @@ class VideoWindow(QMainWindow):
         buttonsPlayerLayout.addWidget(self.timeBox)
         buttonsPlayerLayout.addWidget(self.goBackButton)
         buttonsPlayerLayout.addWidget(self.goBack3Button)
+        buttonsPlayerLayout.addWidget(self.goBack1Button)
         buttonsPlayerLayout.addWidget(self.playButton)
+        buttonsPlayerLayout.addWidget(self.adv1Button)
         buttonsPlayerLayout.addWidget(self.adv3Button)
         buttonsPlayerLayout.addWidget(self.advanceButton)
         
@@ -217,8 +233,10 @@ class VideoWindow(QMainWindow):
             self.slowDownButton.setEnabled(True)
             self.advanceButton.setEnabled(True)
             self.adv3Button.setEnabled(True)
+            self.adv1Button.setEnabled(True)
             self.goBackButton.setEnabled(True)
             self.goBack3Button.setEnabled(True)
+            self.goBack1Button.setEnabled(True)
             self.rate = 1
 
     def exitCall(self):
