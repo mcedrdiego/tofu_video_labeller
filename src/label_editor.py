@@ -72,6 +72,9 @@ class LabelEditorWidget(QWidget):
     def new_mark_begin_end(self, label, begin, end):
         index = self.tableWidget.rowCount() - 1
         self.tableWidget.setItem(index, 0, QTableWidgetItem(str(label)))
+        if not self.default_color:
+                self.default_color = \
+                        self.tableWidget.item(index, 0).background()
         timeItemBegin = QTableWidgetItem(begin)
         timeItemEnd = QTableWidgetItem(end)
         self.tableWidget.setItem(index, 1, timeItemBegin)
