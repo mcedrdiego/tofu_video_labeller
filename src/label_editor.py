@@ -158,7 +158,7 @@ class LabelEditorWidget(QWidget):
                 self.tableWidget.item(i, ii).setBackground(color)
     
     def highight_intersecting_items(self, ts):
-        for ii in range(self.tableWidget.columnCount()):
+        for ii in range(self.tableWidget.rowCount()):
             start = self.get_item_marks(ii, 1)
             end = self.get_item_marks(ii, 2)
             if start != "ERROR_INVALID_VALUE":
