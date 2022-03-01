@@ -25,7 +25,10 @@ class Subtitle:
         return "%s: %s" % (self.timestamp, self.text)
         
     def add_tag(self, tag):
-        self.text += " " + tag
+        if self.text == "":
+            self.text = tag
+        else:
+            self.text += " " + tag
         
 
 class Subtitles:
@@ -45,7 +48,7 @@ class Subtitles:
         return result
     
     def add_row(self, row):
-        threshold_warning_sec = 10
+        threshold_warning_sec = 5
         if row[2] == "...":
             row[2] = "06:00:00,000"
         if len(self.messages) == 0:
@@ -78,6 +81,9 @@ class Subtitles:
                     sub.add_tag(row[0])
                     self.messages.insert(firstInside, sub)
                     firstOutside += 1
+                elif self.messages[firstInside].intTS == begin:
+                    # the current is also the first inside
+                    firstInside -= 1
                 
                 
                 # update exiting messages
