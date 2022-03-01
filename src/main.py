@@ -101,8 +101,8 @@ class VideoWindow(QMainWindow):
         self.playButton.setShortcut(QKeySequence(Qt.Key_Space))
         self.speedUpButton.setShortcut(QKeySequence(Qt.Key_Up))
         self.slowDownButton.setShortcut(QKeySequence(Qt.Key_Down))
-        self.advanceButton.setShortcut(QKeySequence(Qt.Key_Right))
-        self.goBackButton.setShortcut(QKeySequence(Qt.Key_Left))
+        self.adv1Button.setShortcut(QKeySequence(Qt.Key_Right))
+        self.goBack1Button.setShortcut(QKeySequence(Qt.Key_Left))
 
     def create_control(self):
         self.playButton = QPushButton()
