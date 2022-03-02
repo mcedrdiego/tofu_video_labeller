@@ -19,6 +19,7 @@ class LabelGroups(QObject):
     
     def clear(self):
         self.labels = {}
+        self.changed.emit()
 
     def getGroupName(self, labelName):
         if labelName in self.labels:
@@ -34,7 +35,11 @@ class LabelGroups(QObject):
         
     def isIncompPred(self, label1, label2):
         return label2 in self.getPredIncomp(label1)
-        
+    
+    def addLabels(self, labels):
+        for l in labels:
+            self.addLabel(l[0], l[1], l[2])
+        self.changed.emit()
         
     def addLabel(self, labelName, group, pred_incomp):
         self.labels[labelName] = Label(labelName, group, pred_incomp)

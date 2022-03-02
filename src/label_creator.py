@@ -75,12 +75,17 @@ class LabelCreatorWidget(QWidget):
     
     def updateLabels(self, labels):
         self.removeAllLabels()
-        # add new labels
+        # add new labels to the interface
+        entries = []
         for line in labels:
             if len(line) == 5:
-                self.addLabelInternal(line[0], line[1], QKeySequence(line[2]), line[3], line[4])
+                self.addLabelInterface(line[0], line[1], QKeySequence(line[2]), line[3], line[4])
             else:
-                self.addLabelInternal(line[0], line[1], QKeySequence(line[2]))
+                self.addLabelInterface(line[0], line[1], QKeySequence(line[2]))
+            entries.append((line[1], line[3], line[4]))
+
+        # add to the internal structure
+        self.groups.addLabels(entries)
         
     def removeAllLabels(self):
         rows = self.tableWidget.rowCount()
@@ -141,6 +146,9 @@ class LabelCreatorWidget(QWidget):
         self.groups.addLabel(label, group, pred_incomp)
 
         # set interface
+        self.addLabelInterface(lid, label, keySeq, group, pred_incomp)
+    
+    def addLabelInterface(self, lid, label, keySeq, group = "", pred_incomp = ""):
         index = self.tableWidget.rowCount() - 1
         self.tableWidget.setItem(index, 0, QTableWidgetItem(lid))
         self.tableWidget.setItem(index, 1, QTableWidgetItem(label))

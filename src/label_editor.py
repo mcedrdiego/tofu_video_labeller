@@ -130,8 +130,11 @@ class LabelEditorWidget(QWidget):
         self.set_row_color(index, mode)
         self.update_incompatibilities()
 
-
     def new_mark_begin_end(self, label, begin, end):
+        self.new_mark_begin_end_interface(label, begin, end)
+        self.update_incompatibilities()
+
+    def new_mark_begin_end_interface(self, label, begin, end):
         index = self.tableWidget.rowCount() - 1
         self.tableWidget.setItem(index, 0, QTableWidgetItem(str(label)))
         self.set_default_colors(index)
@@ -146,7 +149,6 @@ class LabelEditorWidget(QWidget):
         self.tableWidget.scrollToItem(timeItemBegin)
         self.tableWidget.resizeColumnsToContents()
         self.tableWidget.insertRow(index+1)
-        self.update_incompatibilities()
 
     def eventFilter(self, source, event):
         if(event.type() == QEvent.MouseButtonPress and
@@ -245,8 +247,9 @@ class LabelEditorWidget(QWidget):
         self.removeAllMarks()
 
         for line in marks:
-            self.new_mark_begin_end(line[0], line[1], line[2])
-            
+            self.new_mark_begin_end_interface(line[0], line[1], line[2])
+        self.update_incompatibilities()
+
     def updateSelectedTimestamp(self, ts):
         tstext = format_time(ts)
         item = self.tableWidget.currentItem()
