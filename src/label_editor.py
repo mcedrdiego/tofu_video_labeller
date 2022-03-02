@@ -14,6 +14,7 @@ class LabelEditorWidget(QWidget):
         self.title = 'Label Editor'
         self.control = control
         self.groups = groups
+        self.groups.changed.connect(self.update_incompatibilities)
         self.default_color = None
         self.active_color = QColor(64, 249, 107)
         self.default_text_color = None

@@ -1,4 +1,5 @@
 
+from PyQt5.QtCore import pyqtSignal, QObject
 
 class Label:
     def __init__(self, name, group, pred_incomp):
@@ -7,9 +8,13 @@ class Label:
         self.pred_incompatibilies = pred_incomp
 
 
-class LabelGroups:
+class LabelGroups(QObject):
+    
+    changed = pyqtSignal()
     
     def __init__(self):
+        super().__init__()
+        
         self.labels = {}
     
     def clear(self):
@@ -33,6 +38,8 @@ class LabelGroups:
         
     def addLabel(self, labelName, group, pred_incomp):
         self.labels[labelName] = Label(labelName, group, pred_incomp)
+        self.changed.emit()
 
     def removeLabel(self, labelName):
         self.labels.pop(labelName)
+        self.changed.emit()
