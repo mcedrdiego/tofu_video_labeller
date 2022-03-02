@@ -18,10 +18,14 @@ class LabelGroups:
     def getGroupName(self, labelName):
         if labelName in self.labels:
             return self.labels[labelName].group
+        else:
+            return ""
     
     def getPredIncomp(self, labelName):
         if labelName in self.labels:
             return self.labels[labelName].pred_incompatibilies
+        else:
+            return []
         
     def isIncompPred(self, label1, label2):
         return label2 in self.getPredIncomp(label1)
