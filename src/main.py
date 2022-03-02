@@ -79,8 +79,8 @@ class VideoWindow(QMainWindow):
         self.mediaPlayer = QMediaPlayer(None, QMediaPlayer.VideoSurface)
 
         videoWidget = QVideoWidget()
-        self.editorWidget = LabelEditorWidget(control = self)
         self.creatorWidget = LabelCreatorWidget()
+        self.editorWidget = LabelEditorWidget(self, self.creatorWidget.groups)
         self.create_control()
 
         self.playButton.clicked.connect(self.play)
@@ -210,8 +210,8 @@ class VideoWindow(QMainWindow):
         videoAreaLayout.addWidget(self.errorLabel)
 
         layout = QHBoxLayout()
-        layout.addLayout(videoAreaLayout, 4)
-        layout.addLayout(labellingLayout)
+        layout.addLayout(videoAreaLayout, 3)
+        layout.addLayout(labellingLayout, 1)
 
         wid.setLayout(layout)
 
