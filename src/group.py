@@ -1,62 +1,34 @@
 
 
 class Label:
-    def __init__(self, name, pred_incomp):
+    def __init__(self, name, group, pred_incomp):
         self.name = name
+        self.group = group
         self.pred_incompatibilies = pred_incomp
 
 
-class Group:
-    def __init__(self, name):
-        self.name = name
-        self.labels = {}
-    
-    def addLabel(self, label):
-        self.labels[label.name] = label
-        
-    def removeLabel(self, labelName):
-        self.labels.pop(labelName)
-        
-    def empty(self):
-        return len(self.labels) == 0
-    
 class LabelGroups:
     
     def __init__(self):
-        self.groups = {}
-        self.labelGroup = {}
+        self.labels = {}
     
     def clear(self):
-        self.groups = {}
-        self.labelGroup = {}
+        self.labels = {}
 
     def getGroupName(self, labelName):
-        return self.labelGroup[labelName]
+        if labelName in self.labels:
+            return self.labels[labelName].group
     
     def getPredIncomp(self, labelName):
-        group = self.labelGroup[labelName]
-        if group == "":
-            return []
-        else:
-            return self.groups[group].labels[labelName].pred_incompatibilies
+        if labelName in self.labels:
+            return self.labels[labelName].pred_incompatibilies
         
     def isIncompPred(self, label1, label2):
         return label2 in self.getPredIncomp(label1)
         
-    def addGroup(self, group, label):
-        if not group in self.groups:
-            self.groups[group] = Group(group)
-        self.groups[group].addLabel(label)
         
     def addLabel(self, labelName, group, pred_incomp):
-        self.labelGroup[labelName] = group
-        if group != "":
-            self.addGroup(group, Label(labelName, pred_incomp.split(";")))
+        self.labels[labelName] = Label(labelName, group, pred_incomp)
 
     def removeLabel(self, labelName):
-        group = self.labelGroup[labelName]
-        if group != "":
-            self.groups[group].removeLabel(labelName)
-            if self.groups[group].empty():
-                self.groups.pop(group)
-        self.labelGroup.pop(labelName)
+        self.labels.pop(labelName)
