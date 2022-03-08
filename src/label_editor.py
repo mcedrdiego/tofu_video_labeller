@@ -68,6 +68,9 @@ class LabelEditorWidget(QWidget):
         return beg1 > beg2
         
 
+    def toStringRow(self, rowid):
+        return "(l:" + self.get_item_marks(rowid, 0) + ", s: " + self.get_item_marks(rowid, 1) + ", e: " + self.get_item_marks(rowid, 2) + ")"
+
     # return true if the current row is valid, i.e. if there is no intersection with another row in the same group
     # and if its predecessor in the same group is not in the list of incompatible intervals
     def isInvalidRow(self, rowid):
@@ -84,6 +87,7 @@ class LabelEditorWidget(QWidget):
                 group2 = self.groups.getGroupName(l2)
                 if group2 == groupName:
                     if self.isIntersectingRow(rowid, rid2):
+                        print("ERROR intersecting:", self.toStringRow(rid2), self.toStringRow(rowid))
                         return True
                     elif self.isAfterRow(rowid, rid2) and (pred == -1 or self.isAfterRow(rid2, pred)):
                         pred = rid2
@@ -91,6 +95,7 @@ class LabelEditorWidget(QWidget):
         if pred != -1:
             l2 = self.get_item_marks(pred, 0)
             if self.groups.isIncompPred(labelName, l2):
+                print("ERROR pred incompatibility:", self.toStringRow(pred), self.toStringRow(rowid))
                 return True
         
         return False
