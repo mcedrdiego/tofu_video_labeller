@@ -58,7 +58,7 @@ class LabelEditorWidget(QWidget):
     def isIntersectingRow(self, row1, row2):
         beg1, end1 = self.getBeginEndRow(row1)
         beg2, end2 = self.getBeginEndRow(row2)
-        return (beg2 <= beg1 and beg1 <= end2) or (beg2 <= end1 and end1 <= end2) or (beg1 <= beg2 and beg2 <= end1) or (beg1 <= end2 and end2 <= end1)
+        return (beg2 <= beg1 and beg1 < end2) or (beg2 < end1 and end1 <= end2) or (beg1 <= beg2 and beg2 < end1) or (beg1 < end2 and end2 <= end1)
         
     # assuming that row1 and row2 are not intersecting, it returns true if row1 is after row2
     def isAfterRow(self, row1, row2):
