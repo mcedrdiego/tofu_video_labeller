@@ -1,4 +1,4 @@
-from PyQt5.QtCore import QDir, Qt, QUrl, pyqtSlot, pyqtSignal, QCoreApplication
+from PyQt5.QtCore import QDir, Qt, QUrl, pyqtSlot, pyqtSignal, QCoreApplication, QTimer
 from PyQt5.QtMultimedia import QMediaContent, QMediaPlayer
 from PyQt5.QtMultimediaWidgets import QVideoWidget
 from PyQt5.QtGui import QIcon, QKeySequence
@@ -26,6 +26,25 @@ except ImportError:
     pass
 
 
+class QDoubleClickButton(QPushButton):
+    doubleClicked = pyqtSignal()
+    clicked = pyqtSignal()
+
+    def __init__(self, *args, **kwargs):
+        QPushButton.__init__(self, *args, **kwargs)
+        self.timer = QTimer()
+        self.timer.setSingleShot(True)
+        self.timer.timeout.connect(self.clicked.emit)
+        super().clicked.connect(self.checkDoubleClick)
+
+    @pyqtSlot()
+    def checkDoubleClick(self):
+        if self.timer.isActive():
+            self.doubleClicked.emit()
+            self.timer.stop()
+        else:
+            self.timer.start(250)
+
 class VideoWindow(QMainWindow):
 
     def __init__(self, parent=None):
@@ -52,6 +71,7 @@ class VideoWindow(QMainWindow):
         self.mediaPlayer.setVideoOutput(videoWidget)
         self.mediaPlayer.stateChanged.connect(self.mediaStateChanged)
         self.mediaPlayer.positionChanged.connect(self.positionChanged)
+        self.mediaPlayer.setNotifyInterval(100)
         self.mediaPlayer.durationChanged.connect(self.durationChanged)
         self.mediaPlayer.error.connect(self.handleError)
 
@@ -59,18 +79,21 @@ class VideoWindow(QMainWindow):
         self.mediaPlayer = QMediaPlayer(None, QMediaPlayer.VideoSurface)
 
         videoWidget = QVideoWidget()
-        self.editorWidget = LabelEditorWidget(control = self)
         self.creatorWidget = LabelCreatorWidget()
+        self.editorWidget = LabelEditorWidget(self, self.creatorWidget.groups)
         self.create_control()
 
         self.playButton.clicked.connect(self.play)
         self.speedUpButton.clicked.connect(self.speed)
         self.slowDownButton.clicked.connect(self.slow)
-        self.adv3Button.clicked.connect(partial(self.advance, 100))
-        self.goBack3Button.clicked.connect(partial(self.back, 100))
+        self.adv3Button.clicked.connect(partial(self.advance, 300))
+        self.adv1Button.clicked.connect(partial(self.advance, 100))
+        self.goBack3Button.clicked.connect(partial(self.back, 300))
+        self.goBack1Button.clicked.connect(partial(self.back, 100))
         self.advanceButton.clicked.connect(partial(self.advance, 5000))
         self.goBackButton.clicked.connect(partial(self.back, 5000))
         self.positionSlider.sliderMoved.connect(self.setPosition)
+        self.timeBox.doubleClicked.connect(self.onDoubleClickTimeBox)
 
         return videoWidget
 
@@ -78,8 +101,8 @@ class VideoWindow(QMainWindow):
         self.playButton.setShortcut(QKeySequence(Qt.Key_Space))
         self.speedUpButton.setShortcut(QKeySequence(Qt.Key_Up))
         self.slowDownButton.setShortcut(QKeySequence(Qt.Key_Down))
-        self.advanceButton.setShortcut(QKeySequence(Qt.Key_Right))
-        self.goBackButton.setShortcut(QKeySequence(Qt.Key_Left))
+        self.adv1Button.setShortcut(QKeySequence(Qt.Key_Right))
+        self.goBack1Button.setShortcut(QKeySequence(Qt.Key_Left))
 
     def create_control(self):
         self.playButton = QPushButton()
@@ -96,10 +119,16 @@ class VideoWindow(QMainWindow):
                 self.style().standardIcon(QStyle.SP_MediaSeekBackward))
         self.slowDownButton.setEnabled(False)
 
-        self.adv3Button = QPushButton()
-        self.adv3Button.setToolTip("> 0.1 second")
-        self.adv3Button.setIcon(
+        self.adv1Button = QPushButton()
+        self.adv1Button.setToolTip("> 0.1 second")
+        self.adv1Button.setIcon(
                 self.style().standardIcon(QStyle.SP_ArrowRight))
+        self.adv1Button.setEnabled(False)
+
+        self.adv3Button = QPushButton()
+        self.adv3Button.setToolTip("> 0.3 second")
+        self.adv3Button.setIcon(
+                self.style().standardIcon(QStyle.SP_MediaSeekForward))
         self.adv3Button.setEnabled(False)
 
         self.advanceButton = QPushButton()
@@ -108,10 +137,16 @@ class VideoWindow(QMainWindow):
                 self.style().standardIcon(QStyle.SP_MediaSkipForward))
         self.advanceButton.setEnabled(False)
 
-        self.goBack3Button = QPushButton()
-        self.goBack3Button.setToolTip("< 0.1 second")
-        self.goBack3Button.setIcon(
+        self.goBack1Button = QPushButton()
+        self.goBack1Button.setToolTip("< 0.1 second")
+        self.goBack1Button.setIcon(
                 self.style().standardIcon(QStyle.SP_ArrowLeft))
+        self.goBack1Button.setEnabled(False)
+
+        self.goBack3Button = QPushButton()
+        self.goBack3Button.setToolTip("< 0.3 second")
+        self.goBack3Button.setIcon(
+                self.style().standardIcon(QStyle.SP_MediaSeekBackward))
         self.goBack3Button.setEnabled(False)
 
         self.goBackButton = QPushButton()
@@ -120,8 +155,10 @@ class VideoWindow(QMainWindow):
                 self.style().standardIcon(QStyle.SP_MediaSkipBackward))
         self.goBackButton.setEnabled(False)
 
-        self.timeBox = QLabel(format_time(0), self)
-        self.timeBox.setAlignment(Qt.AlignCenter)
+        self.timeBox = QDoubleClickButton(format_time(0), self)
+        self.timeBox.setToolTip("A double clic on the label set the begin or end timestamp selected in the table")
+        self.timeBox.setEnabled(False)
+
         self.rateBox = QLabel(str(self.rate)+'x', self)
         self.rateBox.setAlignment(Qt.AlignCenter)
 
@@ -129,6 +166,12 @@ class VideoWindow(QMainWindow):
 
         self.positionSlider = QSlider(Qt.Horizontal)
         self.positionSlider.setRange(0, 0)
+
+    def onDoubleClickTimeBox(self):
+        position = self.mediaPlayer.position()
+        self.editorWidget.updateSelectedTimestamp(position)
+        self.editorWidget.highight_intersecting_items(position)
+
 
     def create_menu_bar(self):
         openAction = create_action('open.png', '&Open', 'Ctrl+O', 'Open video',
@@ -167,8 +210,8 @@ class VideoWindow(QMainWindow):
         videoAreaLayout.addWidget(self.errorLabel)
 
         layout = QHBoxLayout()
-        layout.addLayout(videoAreaLayout, 4)
-        layout.addLayout(labellingLayout)
+        layout.addLayout(videoAreaLayout, 3)
+        layout.addLayout(labellingLayout, 1)
 
         wid.setLayout(layout)
 
@@ -183,7 +226,9 @@ class VideoWindow(QMainWindow):
         buttonsPlayerLayout.addWidget(self.timeBox)
         buttonsPlayerLayout.addWidget(self.goBackButton)
         buttonsPlayerLayout.addWidget(self.goBack3Button)
+        buttonsPlayerLayout.addWidget(self.goBack1Button)
         buttonsPlayerLayout.addWidget(self.playButton)
+        buttonsPlayerLayout.addWidget(self.adv1Button)
         buttonsPlayerLayout.addWidget(self.adv3Button)
         buttonsPlayerLayout.addWidget(self.advanceButton)
         
@@ -217,8 +262,11 @@ class VideoWindow(QMainWindow):
             self.slowDownButton.setEnabled(True)
             self.advanceButton.setEnabled(True)
             self.adv3Button.setEnabled(True)
+            self.adv1Button.setEnabled(True)
             self.goBackButton.setEnabled(True)
             self.goBack3Button.setEnabled(True)
+            self.goBack1Button.setEnabled(True)
+            self.timeBox.setEnabled(True)
             self.rate = 1
 
     def exitCall(self):
@@ -279,6 +327,7 @@ class VideoWindow(QMainWindow):
     def positionChanged(self, position):
         self.positionSlider.setValue(position)
         self.timeBox.setText(format_time(position))
+        self.editorWidget.highight_intersecting_items(position)
 
     def durationChanged(self, duration):
         self.positionSlider.setRange(0, duration)
