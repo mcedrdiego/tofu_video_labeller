@@ -1,11 +1,13 @@
 from PyQt5.QtWidgets import (QLabel, QDialog, QFormLayout, QGroupBox,
-        QPushButton, QSizePolicy, QStyle, QVBoxLayout, QWidget, QLineEdit,
-        QTableWidget, QTableWidgetItem, QAction, QAbstractScrollArea, QFrame,
-        QDialogButtonBox)
+                             QPushButton, QSizePolicy, QStyle,
+                             QVBoxLayout, QWidget, QLineEdit,
+                             QTableWidget, QTableWidgetItem, QAction,
+                             QAbstractScrollArea, QFrame, QDialogButtonBox)
 from PyQt5.QtCore import pyqtSlot, Qt, QEvent
 from PyQt5.QtGui import QIcon, QColor
 
 from utils import format_time, str_to_ms
+
 
 class LabelEditorWidget(QWidget):
 
@@ -21,7 +23,6 @@ class LabelEditorWidget(QWidget):
         self.error_color = QColor(255, 0, 0)
         self.initUI()
         self.labels_state = {}
-
 
     def initUI(self):
         self.setWindowTitle(self.title)
@@ -42,11 +43,10 @@ class LabelEditorWidget(QWidget):
         self.tableWidget.setSizeAdjustPolicy(
                 QAbstractScrollArea.AdjustToContents)
         self.tableWidget.setHorizontalHeaderLabels(['label', 'begin', 'end',
-            ''])
+                                                    ''])
         self.tableWidget.setToolTip("Right click on a timestamp to set the player.")
         self.tableWidget.resizeColumnsToContents()
         self.tableWidget.viewport().installEventFilter(self)
-
 
     def getBeginEndRow(self, row):
         s1 = str_to_ms(self.get_item_marks(row, 1))
@@ -111,6 +111,7 @@ class LabelEditorWidget(QWidget):
         if not self.default_text_color:
             self.default_text_color = self.tableWidget.item(index, 0).foreground()
 
+
     def new_mark(self, time, label):
         mode = self.__toggle_label_mode(label)
         if not mode:
@@ -158,7 +159,7 @@ class LabelEditorWidget(QWidget):
     def eventFilter(self, source, event):
         if(event.type() == QEvent.MouseButtonPress and
             event.buttons() == Qt.RightButton and
-            source is self.tableWidget.viewport()):
+                source is self.tableWidget.viewport()):
             item = self.tableWidget.itemAt(event.pos())
             if item and item.column() in [1, 2]:
                 position = str_to_ms(item.text())
@@ -208,8 +209,8 @@ class LabelEditorWidget(QWidget):
 
     def get_marks(self):
         t = self.tableWidget
-        marks = [[self.get_item_marks(i, j) for j in range(t.columnCount()-1)]\
-                for i in range(t.rowCount()-1)]
+        marks = [[self.get_item_marks(i, j) for j in range(t.columnCount()-1)]
+                 for i in range(t.rowCount()-1)]
         return marks
 
     def get_item_marks(self, i, j):
@@ -278,10 +279,3 @@ class LabelEditorWidget(QWidget):
                         if n < 0 or n >= ts:
                             item.setText(tstext)
             self.update_incompatibilities()
-
-
-
-
-
-
-
