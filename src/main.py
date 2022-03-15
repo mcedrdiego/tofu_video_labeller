@@ -2,12 +2,10 @@ from PyQt5.QtCore import QDir, Qt, QUrl, pyqtSlot, pyqtSignal, QCoreApplication,
 from PyQt5.QtMultimedia import QMediaContent, QMediaPlayer
 from PyQt5.QtMultimediaWidgets import QVideoWidget
 from PyQt5.QtGui import QIcon, QKeySequence
-from PyQt5.QtWidgets import (QApplication, QFileDialog, QHBoxLayout,
-                             QLabel, QPushButton, QSizePolicy, QSlider,
-                             QStyle, QVBoxLayout, QWidget,
-                             QTableWidget, QTableWidgetItem,
-                             QMainWindow, QAction,
-                             QAbstractScrollArea, QShortcut)
+from PyQt5.QtWidgets import (QApplication, QFileDialog, QHBoxLayout,QLabel,
+        QPushButton, QSizePolicy, QSlider,QStyle, QVBoxLayout, QWidget,
+        QTableWidget, QTableWidgetItem,QMainWindow, QAction,
+        QAbstractScrollArea, QShortcut)
 
 from utils import create_action, format_time
 from label_creator import LabelCreatorWidget
@@ -65,7 +63,7 @@ class VideoWindow(QMainWindow):
         videoWidget = self.create_player()
         self.errorLabel = QLabel()
         self.errorLabel.setSizePolicy(QSizePolicy.Preferred,
-                                      QSizePolicy.Maximum)
+                QSizePolicy.Maximum)
         self.create_menu_bar()
         wid = QWidget(self)
         self.setCentralWidget(wid)
@@ -80,6 +78,7 @@ class VideoWindow(QMainWindow):
     def create_player(self):
         self.mediaPlayer = QMediaPlayer(None, QMediaPlayer.VideoSurface)
 
+        videoWidget = QVideoWidget()
         self.creatorWidget = LabelCreatorWidget()
         self.editorWidget = LabelEditorWidget(self, self.creatorWidget.groups)
         self.create_control()
