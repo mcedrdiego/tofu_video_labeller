@@ -190,12 +190,14 @@ class LabelEditorWidget(QWidget):
         button = self.sender()
         if button:
             row = self.tableWidget.indexAt(button.pos()).row()
+            self.__reset_label_mode(row)
             self.tableWidget.removeRow(row)
             self.update_incompatibilities()
 
     def removeAllMarks(self):
         rows = self.tableWidget.rowCount()
         for row in range(0, rows - 1):
+            self.__reset_label_mode(0)
             self.tableWidget.removeRow(0)
 
     def set_row_text_color(self, index, mode):
@@ -218,6 +220,12 @@ class LabelEditorWidget(QWidget):
             return self.tableWidget.item(i, j).text()
         except:
             return 'ERROR_INVALID_VALUE'
+
+    def __reset_label_mode(self, row):
+        label = self.tableWidget.item(row, 0).text()
+        print(label, self.labels_state)
+        if label in self.labels_state:
+            self.labels_state[label] = False
 
     def __toggle_label_mode(self, label):
         if label not in self.labels_state:
