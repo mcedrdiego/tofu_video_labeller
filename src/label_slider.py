@@ -62,7 +62,7 @@ class LabelSliderWidget(QWidget):
             qp.drawLine(i, 0, i, 5)
             metrics = qp.fontMetrics()
             fw = metrics.width(str(self.num[j]))
-            qp.drawText(i-fw/2, h/2, str(self.num[j]))
+            qp.drawText(i-fw//2, h//2, str(self.num[j]))
             j = j + 1
 
 
