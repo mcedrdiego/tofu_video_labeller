@@ -5,7 +5,7 @@ from PyQt5.QtGui import QIcon, QKeySequence
 from PyQt5.QtWidgets import (QApplication, QFileDialog, QHBoxLayout,QLabel,
         QPushButton, QSizePolicy, QSlider,QStyle, QVBoxLayout, QWidget,
         QTableWidget, QTableWidgetItem,QMainWindow, QAction,
-        QAbstractScrollArea, QShortcut)
+        QAbstractScrollArea, QShortcut, QMessageBox)
 
 from utils import create_action, format_time
 from label_creator import LabelCreatorWidget
@@ -248,7 +248,8 @@ class VideoWindow(QMainWindow):
 
     def openFile(self):
         fileName, _ = QFileDialog.getOpenFileName(self, "Open video",
-                                                  QDir.homePath())
+                                                  QDir.homePath(), 
+                                                  self.tr("Media File (*.mp4 *.avi *.ogv)"))
 
         if fileName != '':
             self.mediaPlayer.setMedia(
@@ -269,6 +270,18 @@ class VideoWindow(QMainWindow):
             self.rate = 1
 
     def exitCall(self):
+        # TODO Force export before Quit
+        # self.exportCsv()
+        exit_dlg = QMessageBox(self)
+        exit_dlg.setWindowTitle("About to quit!")
+        exit_dlg.setText("Export marks before exit?")
+        exit_dlg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+        exit_dlg.setIcon(QMessageBox.Question)
+        button = exit_dlg.exec()
+        if button == QMessageBox.Yes:
+            self.exportCsv()
+        else:
+            print("Exit")
         QCoreApplication.quit()
 
     def play(self):
@@ -371,6 +384,7 @@ class VideoWindow(QMainWindow):
                 labels = csv.reader(csv_file, delimiter=',', quotechar='"',
                                     quoting=csv.QUOTE_MINIMAL)
                 self.editorWidget.set_marks(labels)
+                self.editorWidget.onSortItems()
 
     def exportCsv(self):
         if hasattr(self, "openedFile"):
@@ -404,4 +418,5 @@ if __name__ == '__main__':
     player = VideoWindow()
     player.resize(940, 480)
     player.show()
-    sys.exit(app.exec_())
+    app.aboutToQuit.connect(player.exitCall)
+    sys.exit(app.exec())
